@@ -1,0 +1,138 @@
+#pragma once
+
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <vector>
+#include <iostream>
+
+#include <shader.hpp>
+#include <rc_Spline.h>
+
+
+
+
+class Track
+{
+public:
+
+	// VAO
+	unsigned int VAO;
+
+	// Control Points Loading Class for loading from File
+	rc_Spline g_Track;
+
+	// Vector of control points
+	std::vector<glm::vec3> controlPoints;
+
+	// constructor, just use same VBO as before, 
+	Track(const char* trackPath)
+	{
+		
+		// load Track data
+		load_track(trackPath);
+
+		create_track();
+
+		setup_track();
+	}
+
+	// render the mesh
+	void Draw(Shader shader, unsigned int textureID)
+	{
+		/*
+		    Draw the objects here.  
+		*/
+	}
+
+	void delete_buffers()
+	{
+		glDeleteVertexArrays(1, &VAO);
+		glDeleteBuffers(1, &VBO);
+		glDeleteBuffers(1, &EBO);
+	}
+
+private:
+	
+
+	/*  Render data  */
+	unsigned int VBO, EBO;
+
+	void load_track(const char* trackPath)
+	{
+		// Set folder path for our projects (easier than repeatedly defining it)
+		g_Track.folder = "../Project2/Media/";
+
+		// Load the control points
+		g_Track.loadSplineFrom(trackPath);
+
+	}
+
+	// Implement the Catmull-Rom Spline here
+	//     Given 4 points, a tau and the u value 
+	//     Since you can just use linear algebra from glm, just make the vectors and matrices and multiply them.  
+	//     This should not be a very complicated function
+	glm::vec3 interpolate(glm::vec3 pointA, glm::vec3 pointB, glm::vec3 pointC, glm::vec3 pointD, float tau, float u)
+	{
+
+
+		// Just returning the first point at the moment, you need to return the interpolated point.  
+		return pointA; 
+	}
+
+	// Here is the class where you will make the vertices or positions of the necessary objects of the track
+	//  For example, to make a basic roller coster:
+	//    First, make the vertices for each rail here (and indices for the EBO if you do it that way which is highly suggested).  
+	//        You need the XYZ world coordinates, the Normal Coordinates, and the texture coordinates.
+	//        The normal coordinates are necessary for the lighting to work.  
+	//    Second, make vector of transformations for the planks across the rails
+	void create_track()
+	{
+		// Create the vertices and indices (optional) for the rails
+		//    One trick in creating these is to move along the spline and 
+		//    shift left and right (from the forward direction of the spline) 
+		//     to find the 3D coordinates of the rails.
+
+
+
+		// Create the plank transformations or just creating the planks vertices
+		//   Remember, you have to make planks be on the rails and in the same rotational direction 
+		//       (look at the pictures from the project description to give you ideas).  
+
+
+
+
+
+
+		// Here is just visualizing of using the control points to set the box transformatins with boxes. 
+		//       You can take this code out for your rollercoster, this is just showing you how to access the control points
+		glm::vec3 currentpos = glm::vec3(-2.0f, 0.0f, -2.0f);
+		/* iterate throught  the points	g_Track.points() returns the vector containing all the control points */
+		for (pointVectorIter ptsiter = g_Track.points().begin(); ptsiter != g_Track.points().end(); ptsiter++)
+		{
+			/* get the next point from the iterator */
+			glm::vec3 pt(*ptsiter);
+
+			// Print the Box
+			std::cout << pt.x << "  " << pt.y << "  " << pt.z << std::endl;
+
+			/* now just the uninteresting code that is no use at all for this project */
+			currentpos += pt;
+			//  Mutliplying by two and translating (in initialization) just to move the boxes further apart.  
+			controlPoints.push_back(currentpos*2.0f);
+
+		}
+	}
+
+	void setup_track()
+	{
+	   // Like the heightmap project, this will create the buffers and send the information to OpenGL
+
+
+
+	
+	
+	}
+
+};
